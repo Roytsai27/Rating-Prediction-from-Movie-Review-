@@ -32,8 +32,8 @@ if you problem is a regression problem , then you would like to minimize Mse and
 * Linear Regression
 * Lasso Regression
 * Random Forest Regressor
-* SVC
-#### Here we want to minimize MSE and we found that the best model for this data is SVC
+* SVR
+#### Here we want to minimize MSE and we found that the best model for this data is SVR
 ## Parameter tuning
 *  use_idf
 *  n_components
