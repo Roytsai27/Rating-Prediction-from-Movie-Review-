@@ -8,11 +8,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer ,TfidfTransformer,Co
 from sklearn.decomposition import TruncatedSVD
 from sklearn.svm import SVR
 from sklearn.model_selection import GridSearchCV, KFold
-
+import nltk
 #Load data
 
 df1 = pd.read_csv("training_data.csv")
 df2 = pd.read_csv("test_data.csv")
+text_train = df1["text"].values
+text_test = df2["text"].values
+y_train = df1["stars"].values
 
 #prepocessing 
 
@@ -48,18 +51,23 @@ param_grid = {'svr__C': [0.001, 0.01, 0.1, 1, 10], 'svr__gamma': [0.001, 0.01, 0
               'SVD__n_components':[1000,2000,3000,4000],'vec_ngram_range':[(1,1),(1,2),(1,3)],
               'tfidf__use_idf': (True, False)}
 cv = KFold(shuffle=True)
-grid = GridSearchCV(pipe, param_grid=param_grid, cv=cv, verbose=3)
-grid.fit(X_train, y_train)
-grid.predict(X_test)
+grid = GridSearchCV(clf, param_grid=param_grid, cv=cv, verbose=3)
+# grid.fit(X_train, y_train)
+# grid.predict(X_test)
 #print(grid.best_score_) # 0.4652
 #print(grid.best_params_) # {'C': 10, 'gamma': 1}
 
+#fit Model
 clf.fit(text_train, y_train)
 y_test = clf.predict(text_test)
 print(y_test)
+
+#Adjust the value to 1~5
 for i in range(len(y_test)):
 	if (y_test[i]>5) : y_test[i]=5
 	if (y_test[i]<1) : y_test[i]=1
+
+#create output
 result=[]
 for i in range(df2.shape[0]):
     result.append([df2["review_id"][i], y_test[i]])
